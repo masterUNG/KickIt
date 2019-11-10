@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_ui_designs/stats/my_stats.dart';
 import 'one.dart';
 import 'two.dart';
 import 'three.dart';
@@ -89,7 +90,7 @@ class KickItHomePages extends StatelessWidget {
           case 3:
             returnValue = CupertinoTabView(builder: (context) {
               return CupertinoPageScaffold(
-                child: FourTab(),
+                child: MyStats(),
               );
             });
             break;

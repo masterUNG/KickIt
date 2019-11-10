@@ -90,6 +90,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Future<void> findUID() async {
     FirebaseAuth firebaseAuth = FirebaseAuth.instance;
     FirebaseUser firebaseUser = await firebaseAuth.currentUser();
+    UserUpdateInfo userUpdateInfo = UserUpdateInfo();
+    userUpdateInfo.displayName = firstName;
+    firebaseUser.updateProfile(userUpdateInfo);
     String uidLogin = firebaseUser.uid;
     updateDatabaseThread(uidLogin);
   }

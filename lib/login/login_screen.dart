@@ -5,6 +5,7 @@ import 'package:flutter_ui_designs/apps.dart';
 import 'package:flutter_ui_designs/login/constants.dart';
 import 'package:flutter_ui_designs/login/sign_up.dart';
 import 'package:flutter_ui_designs/login/forgot_password.dart';
+import 'package:flutter_ui_designs/utility/my_alert.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -13,14 +14,16 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _rememberMe = false;
+  String email, password;
+  final formKey = GlobalKey<FormState>();
 
   @override
-  void initState() { 
+  void initState() {
     super.initState();
     checkStatus();
   }
 
-  Future<void> checkStatus()async{
+  Future<void> checkStatus() async {
     FirebaseAuth firebaseAuth = FirebaseAuth.instance;
     FirebaseUser firebaseUser = await firebaseAuth.currentUser();
     if (firebaseUser != null) {
@@ -28,9 +31,15 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  void moveToApps(){
-    MaterialPageRoute materialPageRoute = MaterialPageRoute(builder: (BuildContext context){return KickItApps();});
-    Navigator.of(context).pushAndRemoveUntil(materialPageRoute, (Route<dynamic> route){return false;});
+  void moveToApps() {
+    MaterialPageRoute materialPageRoute =
+        MaterialPageRoute(builder: (BuildContext context) {
+      return KickItApps();
+    });
+    Navigator.of(context).pushAndRemoveUntil(materialPageRoute,
+        (Route<dynamic> route) {
+      return false;
+    });
   }
 
   Widget _buildEmailTF() {
@@ -46,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
           height: 50.0,
-          child: TextField(
+          child: TextFormField(
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(
               color: Colors.white,
@@ -62,6 +71,9 @@ class _LoginScreenState extends State<LoginScreen> {
               hintText: 'Enter your Email',
               hintStyle: kHintTextStyle,
             ),
+            onSaved: (value) {
+              email = value.trim();
+            },
           ),
         ),
       ],
@@ -81,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
           height: 50.0,
-          child: TextField(
+          child: TextFormField(
             obscureText: true,
             style: TextStyle(
               color: Colors.white,
@@ -97,6 +109,9 @@ class _LoginScreenState extends State<LoginScreen> {
               hintText: 'Enter your Password',
               hintStyle: kHintTextStyle,
             ),
+            onSaved: (value) {
+              password = value.trim();
+            },
           ),
         ),
       ],
@@ -107,7 +122,10 @@ class _LoginScreenState extends State<LoginScreen> {
     return Container(
       alignment: Alignment.centerRight,
       child: FlatButton(
-        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (_) => ForgotPasswordScreen ()));},
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (_) => ForgotPasswordScreen()));
+        },
         padding: EdgeInsets.only(right: 0.0),
         child: Text(
           'Forgot Password?',
@@ -144,13 +162,35 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  Future<void> checkAuthen() async {
+    if (email.isEmpty || password.isEmpty) {
+      normalDialog(context, 'Have Space', 'Please Fill Every Blank');
+    } else {
+      FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+      await firebaseAuth
+          .signInWithEmailAndPassword(email: email, password: password)
+          .then((response) {
+            moveToApps();
+          }).catchError((response){
+            String title = response.code;
+            String message = response.message;
+            normalDialog(context, title, message);
+          });
+    }
+  }
+
   Widget _buildLoginBtn() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () {},
+        onPressed: () {
+          print('Click Login');
+          formKey.currentState.save();
+          print('email = $email, pass = $password');
+          checkAuthen();
+        },
         padding: EdgeInsets.all(10.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
@@ -240,7 +280,8 @@ class _LoginScreenState extends State<LoginScreen> {
     return GestureDetector(
       onTap: () {
         print('Sign Up Button Pressed');
-        MaterialPageRoute materialPageRoute = MaterialPageRoute(builder: (BuildContext context)=>SignUpScreen());
+        MaterialPageRoute materialPageRoute = MaterialPageRoute(
+            builder: (BuildContext context) => SignUpScreen());
         Navigator.of(context).push(materialPageRoute);
       },
       child: RichText(
@@ -260,7 +301,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 color: Colors.white,
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
-
               ),
             ),
           ],
@@ -278,16 +318,11 @@ class _LoginScreenState extends State<LoginScreen> {
           onTap: () => FocusScope.of(context).unfocus(),
           child: Stack(
             children: <Widget>[
-
-             Container(
-               decoration: BoxDecoration(
-               image: new DecorationImage(
-                image: new AssetImage("assets/atro/B3.jpg"),
-                  fit: BoxFit.cover
-               )
-              )
-             ),
-
+              Container(
+                  decoration: BoxDecoration(
+                      image: new DecorationImage(
+                          image: new AssetImage("assets/atro/B3.jpg"),
+                          fit: BoxFit.cover))),
               Container(
                 height: double.infinity,
                 child: SingleChildScrollView(
@@ -296,41 +331,41 @@ class _LoginScreenState extends State<LoginScreen> {
                     horizontal: 40.0,
                     vertical: 30.0,
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        height: 140,
-                          decoration: BoxDecoration(
-                              image: new DecorationImage(
-                                  image: new AssetImage("assets/atro/logo.png"),
-                                  fit: BoxFit.cover
-                              )
-                          )
-                      ),
-
-                      Text(
-                        'Sign In',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'OpenSans',
-                          fontSize: 30.0,
-                          fontWeight: FontWeight.bold,
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                            height: 140,
+                            decoration: BoxDecoration(
+                                image: new DecorationImage(
+                                    image:
+                                        new AssetImage("assets/atro/logo.png"),
+                                    fit: BoxFit.cover))),
+                        Text(
+                          'Sign In',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'OpenSans',
+                            fontSize: 30.0,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 30.0),
-                      _buildEmailTF(),
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                      _buildPasswordTF(),
-                      _buildForgotPasswordBtn(),
-                      _buildRememberMeCheckbox(),
-                      _buildLoginBtn(),
-                      _buildSignInWithText(),
-                      _buildSocialBtnRow(),
-                      _buildSignupBtn(),
-                    ],
+                        SizedBox(height: 30.0),
+                        _buildEmailTF(),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        _buildPasswordTF(),
+                        _buildForgotPasswordBtn(),
+                        _buildRememberMeCheckbox(),
+                        _buildLoginBtn(),
+                        _buildSignInWithText(),
+                        _buildSocialBtnRow(),
+                        _buildSignupBtn(),
+                      ],
+                    ),
                   ),
                 ),
               )
