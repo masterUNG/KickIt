@@ -129,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (_) => SignUpScreen ()));},
+        onPressed: () {},
         padding: EdgeInsets.all(10.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
@@ -217,7 +217,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildSignupBtn() {
     return GestureDetector(
-      onTap: () => print('Sign Up Button Pressed'),
+      onTap: () {
+        print('Sign Up Button Pressed');
+        MaterialPageRoute materialPageRoute = MaterialPageRoute(builder: (BuildContext context)=>SignUpScreen());
+        Navigator.of(context).push(materialPageRoute);
+      },
       child: RichText(
         text: TextSpan(
           children: [

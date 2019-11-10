@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ui_designs/apps.dart';
+import 'package:flutter_ui_designs/login/login_screen.dart';
 
 
 void main() {
@@ -22,7 +23,12 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   startTime() async {
     var _duration = new Duration(seconds: 2);
-    return new Timer(_duration, navigationPage);
+    return new Timer(_duration, authenProcess);
+  }
+
+  void authenProcess(){
+    MaterialPageRoute materialPageRoute = MaterialPageRoute(builder: (BuildContext context)=>LoginScreen());
+    Navigator.of(context).pushAndRemoveUntil(materialPageRoute, (Route<dynamic> route)=>false);
   }
 
   void navigationPage() {
