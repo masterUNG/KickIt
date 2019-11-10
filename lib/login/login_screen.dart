@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui_designs/apps.dart';
 import 'package:flutter_ui_designs/login/constants.dart';
 import 'package:flutter_ui_designs/login/sign_up.dart';
 import 'package:flutter_ui_designs/login/forgot_password.dart';
@@ -11,6 +13,25 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _rememberMe = false;
+
+  @override
+  void initState() { 
+    super.initState();
+    checkStatus();
+  }
+
+  Future<void> checkStatus()async{
+    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+    FirebaseUser firebaseUser = await firebaseAuth.currentUser();
+    if (firebaseUser != null) {
+      moveToApps();
+    }
+  }
+
+  void moveToApps(){
+    MaterialPageRoute materialPageRoute = MaterialPageRoute(builder: (BuildContext context){return KickItApps();});
+    Navigator.of(context).pushAndRemoveUntil(materialPageRoute, (Route<dynamic> route){return false;});
+  }
 
   Widget _buildEmailTF() {
     return Column(

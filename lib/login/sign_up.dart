@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/services.dart';
+import 'package:flutter_ui_designs/apps.dart';
 import 'package:flutter_ui_designs/login/constants.dart';
 
 import 'package:flutter_ui_designs/utility/my_alert.dart';
@@ -76,13 +78,41 @@ class _SignUpScreenState extends State<SignUpScreen> {
       await firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password)
           .then((response) {
-
-          }).catchError((response){
-            String title = response.code;
-            String message = response.message;
-            normalDialog(context, title, message);
-          });
+        findUID();
+      }).catchError((response) {
+        String title = response.code;
+        String message = response.message;
+        normalDialog(context, title, message);
+      });
     }
+  }
+
+  Future<void> findUID() async {
+    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+    FirebaseUser firebaseUser = await firebaseAuth.currentUser();
+    String uidLogin = firebaseUser.uid;
+    updateDatabaseThread(uidLogin);
+  }
+
+  Future<void> updateDatabaseThread(String uidLogin) async {
+    Map<String, dynamic> map = Map();
+    map['Avatar'] =
+        'https://firebasestorage.googleapis.com/v0/b/kickit2-88794.appspot.com/o/Avatar%2Ficonfinder_free-17_463011.png?alt=media&token=0a97cc7b-e765-4302-88af-359f7efb05a0';
+    map['FirstName'] = firstName;
+    map['LastName'] = lastName;
+    map['Email'] = email;
+    map['Password'] = password;
+
+    Firestore firestore = Firestore.instance;
+    CollectionReference collectionReference = firestore.collection('User');
+    await collectionReference
+        .document(uidLogin)
+        .setData(map)
+        .then((response) {
+          print('Register Success');
+          MaterialPageRoute materialPageRoute = MaterialPageRoute(builder: (BuildContext context)=>KickItApps());
+          Navigator.of(context).pushAndRemoveUntil(materialPageRoute, (Route<dynamic> route)=>false);
+        });
   }
 
   Widget _buildFirstNameTF() {
