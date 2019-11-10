@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ui_designs/login/constants.dart';
 import 'package:flutter_ui_designs/login/login_screen.dart';
+import 'package:flutter_ui_designs/utility/my_alert.dart';
 
 class SignUpScreen extends StatefulWidget {
   _SignUpScreenState createState() => _SignUpScreenState();
@@ -42,7 +43,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
          
           formKey.currentState.save();
            print('FirstName = $firstName, Last = $lastName, email = $email, password = $password');
-
+          registerThread();
         },
         padding: EdgeInsets.all(10.0),
         shape: RoundedRectangleBorder(
@@ -62,6 +63,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
     );
   }
+
+  Future<void> registerThread()async{
+
+    if (firstName.isEmpty || lastName.isEmpty || email.isEmpty || password.isEmpty) {
+      normalDialog(context, 'Have Space', 'Please Fill Every Blank');
+    } else {
+
+    }
+
+  }
+
+
 
   Widget _buildFirstNameTF() {
     return Column(
