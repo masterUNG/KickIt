@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1094835153431",
+    "firebase_url": "https://kickit2-88794.firebaseio.com",
+    "project_id": "kickit2-88794",
+    "storage_bucket": "kickit2-88794.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1094835153431:android:c2d74156dda1b9abe44a52",
+        "android_client_info": {
+          "package_name": "com.kickit69.flutter_appmaster"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1094835153431-ihrp8nr9hv9760047i3sqco62ab3otpg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBK_55XZz53WaM6bP2WxWORR-I_e-ZeBGY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1094835153431-ihrp8nr9hv9760047i3sqco62ab3otpg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

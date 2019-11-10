@@ -1,4 +1,4 @@
-package com.kickit69.flutter_app;
+package com.kickit69.flutter_appmaster;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
