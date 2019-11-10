@@ -62,11 +62,19 @@ class _MyStatsState extends State<MyStats> {
     );
   }
 
+  Widget friendlyTop(){
+    return Row(children: <Widget>[Text('Left'), Text('Right')],);
+  }
+
+  Widget friendlyMatch(){
+    return Column(children: <Widget>[friendlyTop(),friendlyTop()],);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: showCalendar(),
+        child: ListView(children: <Widget>[showCalendar(),friendlyMatch(),],),
       ),
     );
   }
