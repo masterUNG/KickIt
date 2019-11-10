@@ -1,8 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_ui_designs/login/constants.dart';
-import 'package:flutter_ui_designs/login/login_screen.dart';
+
 import 'package:flutter_ui_designs/utility/my_alert.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -40,9 +41,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
       child: RaisedButton(
         elevation: 5.0,
         onPressed: () {
-         
           formKey.currentState.save();
-           print('FirstName = $firstName, Last = $lastName, email = $email, password = $password');
+          print(
+              'FirstName = $firstName, Last = $lastName, email = $email, password = $password');
           registerThread();
         },
         padding: EdgeInsets.all(10.0),
@@ -64,17 +65,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  Future<void> registerThread()async{
-
-    if (firstName.isEmpty || lastName.isEmpty || email.isEmpty || password.isEmpty) {
+  Future<void> registerThread() async {
+    if (firstName.isEmpty ||
+        lastName.isEmpty ||
+        email.isEmpty ||
+        password.isEmpty) {
       normalDialog(context, 'Have Space', 'Please Fill Every Blank');
     } else {
+      FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+      await firebaseAuth
+          .createUserWithEmailAndPassword(email: email, password: password)
+          .then((response) {
 
+          }).catchError((response){
+            String title = response.code;
+            String message = response.message;
+            normalDialog(context, title, message);
+          });
     }
-
   }
-
-
 
   Widget _buildFirstNameTF() {
     return Column(
@@ -228,7 +237,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     horizontal: 40.0,
                     vertical: 30.0,
                   ),
-                  child: Form(key: formKey,
+                  child: Form(
+                    key: formKey,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
